@@ -1,35 +1,23 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+
 import Pokemon from './Pokemon';
+import { fetchAdditionalData, selectPokemons, selectAdditionalData } from '../redux/features/pokemons/pokemonsSlice';
 
 const PokemonWrapper = () => {
-    const [pokemons, setPokemons] = useState([]);
-
-    const fetchPokemons = async () => {
-        const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=20");
-        const data = await res.json();
-        setPokemons(data.results);
-    }
-
-    const fetchPokemonData = async () => {
-        if (pokemons.length) {
-            pokemons.forEach(async pokemon => {
-                const additionalInfo = await fetch(pokemon.url);
-                const data = await additionalInfo.json();
-                pokemon['additionalInfo'] = data;
-            });
-        }
-    }
+    const pokemons = useSelector(selectPokemons);
+    const additionalData = useSelector(selectAdditionalData);
+    const dispatch = useDispatch();
 
     useEffect(() => {
-        fetchPokemons();
-        fetchPokemonData();
-        console.log(pokemons[0].additionalInfo)
-    }, []);
-
+        pokemons.forEach(async pokemon =>
+            dispatch(fetchAdditionalData(pokemon.url))
+        );
+    }, [dispatch]);
 
     return (
         <div>
-            {pokemons.length && pokemons.map(pokemon => <Pokemon pokemon={pokemon} />)}
+            {pokemons.length && pokemons.map(pokemon => <Pokemon pokemon={pokemon} key={pokemon.url} />)}
         </div>
     )
 }

@@ -5,8 +5,6 @@ const Pokemon = ({ pokemon }) => {
     return (
         <div>
             <h2>{name}</h2>
-            {/* <h2>{pokemon.additionalData.id}</h2> */}
-            {/* <img src={pokemon.additionalInfo.sprites.front_default} alt={pokemon.name} /> */}
         </div>
     )
 }
