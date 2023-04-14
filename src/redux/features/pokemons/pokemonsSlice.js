@@ -1,29 +1,29 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { config } from "../../../config";
 
 const initialState = {
     pokemons: [],
-    additionalData: [],
     status: "idle",
-    message: ""
+    message: "",
 };
 
-export const fetchPokemons = createAsyncThunk(
-    'pokemons/fetchPokemons',
-    async () => {
-        const res = await fetch("https://pokeapi.co/api/v2/pokemon?limit=20");
+const fetchAsyncAdditionalData = async ({ url }) => {
+    const res = await fetch(url);
+    const data = await res.json();
+    return data;
+}
+export const fetchAsyncPokemons = createAsyncThunk(
+    'pokemons/fetchAsyncPokemons',
+    async ({ limit = 15, offset = 0 }) => {
+        const res = await fetch(`${config.baseApi}?limit=${limit}&offset=${offset}`);
         const data = await res.json();
-        return data.results;
+        const dataWithDetails = await Promise.all(data.results.map(async ({ url }) =>
+            await fetchAsyncAdditionalData({ url })
+        ))
+        return dataWithDetails;
     }
 )
 
-export const fetchAdditionalData = createAsyncThunk(
-    'pokemons/fetchAdditionalData',
-    async (url) => {
-        const res = await fetch(url);
-        const data = await res.json();
-        return data;
-    }
-)
 
 export const pokemonsSlice = createSlice({
     name: 'pokemons',
@@ -31,33 +31,19 @@ export const pokemonsSlice = createSlice({
     reducers: {},
     extraReducers: (builder) => {
         builder
-            .addCase(fetchPokemons.pending, (state, action) => {
+            .addCase(fetchAsyncPokemons.pending, (state, action) => {
                 state.status = "loading";
             })
-            .addCase(fetchPokemons.fulfilled, (state, action) => {
+            .addCase(fetchAsyncPokemons.fulfilled, (state, action) => {
                 state.status = "succeeded";
-                state.pokemons = state.pokemons.concat(action.payload);
+                state.pokemons = action.payload;
             })
-            .addCase(fetchPokemons.rejected, (state, action) => {
+            .addCase(fetchAsyncPokemons.rejected, (state, action) => {
                 state.status = "failed";
                 state.error = action.error.message;
             })
-            .addCase(fetchAdditionalData.pending, (state, action) => {
-                state.status = "loading";
-            })
-            .addCase(fetchAdditionalData.fulfilled, (state, action) => {
-                state.status = "succeeded";
-                state.additionalData.push(action.payload);
-                // console.log(action.payload);
-            })
-            .addCase(fetchAdditionalData.rejected, (state, action) => {
-                state.status = "failed";
-                state.error = action.error.message;
-            })
-
     }
 });
 
 export const selectPokemons = state => state.pokemons.pokemons;
-export const selectAdditionalData = state => state.pokemons.additionalData;
 export default pokemonsSlice.reducer;
