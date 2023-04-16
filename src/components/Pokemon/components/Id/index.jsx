@@ -1,13 +1,25 @@
+import React from 'react';
 import { Typography } from '@mui/material';
-import React from 'react'
 
 export const Id = ({ pokemon }) => {
     let { id } = pokemon;
 
     const getId = (id) => {
-        return id < 10 ? `#00${id}` : `#0${id}`;
+        if (id < 1000) {
+            if (id < 10) {
+                return `#000${id}`;
+            }
+
+            if (id < 100) {
+                return `#00${id}`;
+            }
+
+            return `#0${id}`;
+        }
+
+        return `#${id}`;
     }
     return (
-        <Typography component="h4" sx={{ color: 'rgb(45,64,23)' }}>{getId(id)}</Typography>
+        <Typography component="h4" variant="h5" sx={{ color: 'rgb(45, 64, 23)' }}>{getId(id)}</Typography>
     )
 }

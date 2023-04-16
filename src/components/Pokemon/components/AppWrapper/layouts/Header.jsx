@@ -1,4 +1,5 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import {
   AppBar, Container, Toolbar,
@@ -6,17 +7,19 @@ import {
   MenuItem, Button, Avatar, Tooltip
 } from '@mui/material';
 
-const pages = ['Home', 'Pokedex', 'About us'];
-const settings = ['Home', 'Pokedex', 'Dashboard', 'Logout'];
-
 
 export const Header = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
+  const pages = ['News', 'Pokedex', 'About'];
+  const settings = ['Home', 'Pokedex', 'Dashboard', 'Logout'];
+
+
   const handleOpenNavMenu = (event) => {
     setAnchorElNav(event.currentTarget);
   };
+
   const handleOpenUserMenu = (event) => {
     setAnchorElUser(event.currentTarget);
   };
@@ -29,19 +32,19 @@ export const Header = () => {
     setAnchorElUser(null);
   };
 
+
   return (
     <AppBar position="static" sx={{ px: 12 }}>
       <Container maxWidth="xl" disableGutters>
         <Toolbar disableGutters>
-          <Typography component="a" href="">
+          <Link to="/">
             <Box
               component="img"
               sx={{ height: 64 }}
               alt="Pokedex logo"
               src={"https://archives.bulbagarden.net/media/upload/4/4b/Pok%C3%A9dex_logo.png"}
             />
-          </Typography>
-
+          </Link>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
             <IconButton
               size="large"
@@ -80,13 +83,15 @@ export const Header = () => {
 
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page) => (
-              <Button
-                key={page}
-                onClick={handleCloseNavMenu}
-                sx={{ my: 2, mx: 2, color: 'white', display: 'block' }}
-              >
-                {page}
-              </Button>
+              <Link to={`/${page.toLocaleLowerCase()}`} >
+                <Button
+                  key={page}
+                  onClick={handleCloseNavMenu}
+                  sx={{ my: 2, mx: 2, color: 'white', display: 'block' }}
+                >
+                  {page}
+                </Button>
+              </Link>
             ))}
           </Box>
 
@@ -121,6 +126,6 @@ export const Header = () => {
           </Box>
         </Toolbar>
       </Container>
-    </AppBar>
+    </AppBar >
   );
 }
