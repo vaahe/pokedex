@@ -42,7 +42,7 @@ export const Header = () => {
               component="img"
               sx={{ height: 64 }}
               alt="Pokedex logo"
-              src={"https://archives.bulbagarden.net/media/upload/4/4b/Pok%C3%A9dex_logo.png"}
+              src={`${process.env.PUBLIC_URL}/logo.svg`}
             />
           </Link>
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
