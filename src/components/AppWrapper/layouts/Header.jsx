@@ -12,8 +12,8 @@ export const Header = () => {
   const [anchorElNav, setAnchorElNav] = React.useState(null);
   const [anchorElUser, setAnchorElUser] = React.useState(null);
 
-  const pages = ['News', 'Pokedex', 'About'];
-  const settings = ['Home', 'Pokedex', 'Dashboard', 'Logout'];
+  const pages = ['News', 'Pokemons', 'About'];
+  const settings = ['Home', 'Pokemons', 'Dashboard', 'Logout'];
 
 
   const handleOpenNavMenu = (event) => {
@@ -37,7 +37,7 @@ export const Header = () => {
     <AppBar position="static" sx={{ px: 12 }}>
       <Container maxWidth="xl" disableGutters>
         <Toolbar disableGutters>
-          <Link to="/">
+          <Link to="/pokedex">
             <Box
               component="img"
               sx={{ height: 64 }}
