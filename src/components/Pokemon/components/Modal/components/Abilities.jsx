@@ -18,9 +18,9 @@ export const Abilities = ({ pokemon }) => {
         <Box component="div">
             <Typography variant='h5' sx={{ mb: 2 }}>Abilities</Typography>
             <Box>
-                {abilities && abilities.map(ability =>
-                    <Typography component="span" variant="h6" sx={{ display: "block", textTransform: "capitalize" }}>
-                        {ability.ability.name}
+                {abilities && abilities.map(slot =>
+                    <Typography component="span" variant="h6" sx={{ display: "block", textTransform: "capitalize" }} key={slot.ability.name}>
+                        {slot.ability.name}
                     </Typography>
                 )}
             </Box>

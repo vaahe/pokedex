@@ -24,6 +24,7 @@ export const FilterArea = () => {
         dispatch(setFilters({ ...filters, name: e.target.value }));
     }
 
+
     return (
         <Box component="div" sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-evenly', mx: 12, mt: 6 }}>
             <Box

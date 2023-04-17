@@ -45,8 +45,8 @@ export const Footer = (props) => {
 }
 
 Footer.propTypes = {
-  description: PropTypes.string.isRequired,
-  title: PropTypes.string.isRequired,
+  description: PropTypes.string,
+  title: PropTypes.string,
 };
 
 export default Footer;
