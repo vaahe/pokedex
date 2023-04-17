@@ -7,7 +7,7 @@ import { Container } from "components/Container";
 
 export const routes = [
     {
-        path: "/",
+        path: "/pokedex",
         element: <Container />
     },
     {

@@ -37,7 +37,7 @@ export const Header = () => {
     <AppBar position="static" sx={{ px: 12 }}>
       <Container maxWidth="xl" disableGutters>
         <Toolbar disableGutters>
-          <Link to="/">
+          <Link to="/pokedex">
             <Box
               component="img"
               sx={{ height: 64 }}
