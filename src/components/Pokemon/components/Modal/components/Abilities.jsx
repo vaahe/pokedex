@@ -1,5 +1,7 @@
+import React, { useEffect, useState } from 'react';
+
 import { Box, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react'
+
 
 export const Abilities = ({ pokemon }) => {
     const [abilities, setAbilities] = useState([]);
@@ -14,10 +16,12 @@ export const Abilities = ({ pokemon }) => {
 
     return (
         <Box component="div">
-            <Typography variant='h5'>Abilities</Typography>
+            <Typography variant='h5' sx={{ mb: 2 }}>Abilities</Typography>
             <Box>
                 {abilities && abilities.map(ability =>
-                    <Typography component="h3" variant="h6">{ability.ability.name}</Typography>
+                    <Typography component="span" variant="h6" sx={{ display: "block", textTransform: "capitalize" }}>
+                        {ability.ability.name}
+                    </Typography>
                 )}
             </Box>
         </Box>

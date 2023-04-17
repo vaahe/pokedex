@@ -1,11 +1,11 @@
+import { Box } from '@mui/material';
 import React from 'react';
 
-import "./Image.module.css";
 
 export const Image = ({ pokemon }) => {
     const imgUrl = pokemon.sprites.other.dream_world.front_default;
 
     return (
-        <img src={imgUrl} alt={pokemon.name} />
+        <Box component="img" src={imgUrl} alt={pokemon.name} sx={{ width: "150px", height: "150px" }} />
     )
 }

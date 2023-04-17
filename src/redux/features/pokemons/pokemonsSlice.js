@@ -1,11 +1,17 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+
 import { config } from "../../../config";
 
 const initialState = {
-    pokemons: [],
-    filteredPokemons: [],
-    status: "idle",
     message: "",
+    pokemons: [],
+    status: "idle",
+    prefiltered: 0,
+    filteredPokemons: [],
+    filters: {
+        name: "",
+        types: []
+    }
 };
 
 const fetchAsyncAdditionalData = async ({ url }) => {
@@ -17,18 +23,9 @@ const fetchAsyncAdditionalData = async ({ url }) => {
 
 export const fetchAsyncPokemons = createAsyncThunk(
     'pokemons/fetchAsyncPokemons',
-    async (
-        // { limit = 15, offset = 0 }
-    ) => {
+    async () => {
         const res = await fetch(`${config.baseApi}/?limit=1281`);
         const data = await res.json();
-        console.log(data);
-        debugger;
-
-        // const dataWithDetails = await Promise.all(data.results.map(async ({ url }) =>
-        //     await fetchAsyncAdditionalData({ url })
-        // ));
-        // return dataWithDetails;
 
         return data.results;
     }
@@ -39,25 +36,32 @@ export const fetchNewGroup = createAsyncThunk(
     'pokemons/fetchNewGroup',
     async ({ limit = 15, offset = 0 }, { getState }) => {
         const state = getState();
-        console.log(offset, limit);
-        const pokemonsGroup = state.pokemons.slice(offset, offset + limit);
-        console.log(pokemonsGroup);
-        debugger;
+        const filters = selectFilters(state);
+        const pokemons = selectPokemons(state);
+
+        const prefiltered = pokemons.filter(pokemon => filters.name ? pokemon.name.startsWith(filters.name) : pokemon);
+
+        const pokemonsGroup = prefiltered.slice(offset, offset + limit);
         const pokemonsGroupData = await Promise.all(pokemonsGroup.map(async ({ url }) =>
             await fetchAsyncAdditionalData({ url })
         ));
 
-        return pokemonsGroupData;
+        return [pokemonsGroupData, prefiltered.length];
     }
 )
-
-
 
 
 export const pokemonsSlice = createSlice({
     name: 'pokemons',
     initialState: initialState,
-    reducers: {},
+    reducers: {
+        setFilters: (state, action) => {
+            state.filters = action.payload;
+        },
+        setFilterTypes: (state, action) => {
+            state.filters.types = action.payload
+        }
+    },
     extraReducers: (builder) => {
         builder
             .addCase(fetchAsyncPokemons.pending, (state, action) => {
@@ -73,12 +77,9 @@ export const pokemonsSlice = createSlice({
             });
 
         builder
-            .addCase(fetchNewGroup.pending, (state, action) => {
-                state.status = "loading";
-            })
             .addCase(fetchNewGroup.fulfilled, (state, action) => {
-                state.status = "succeeded";
-                state.filteredPokemons = action.payload;
+                state.filteredPokemons = action.payload[0];
+                state.prefiltered = action.payload[1];
             })
             .addCase(fetchNewGroup.rejected, (state, action) => {
                 state.status = "failed";
@@ -87,9 +88,14 @@ export const pokemonsSlice = createSlice({
     }
 });
 
-export const selectFilteredPokemons = state => state.pokemons.filteredPokemons
-export const selectPokemonsLength = state => state.pokemons.pokemons.length;
+export const { setFilters, setFilterTypes } = pokemonsSlice.actions;
+
+
+export const selectFilters = state => state.pokemons.filters;
 export const selectPokemons = state => state.pokemons.pokemons;
-export const selectStatus = state => state.pokemons.status;
+export const selectPrefiltered = state => state.pokemons.prefiltered;
+export const selectStatus = state => state.pokemons.status === "loading";
+export const selectPokemonsLength = state => state.pokemons.pokemons.length;
+export const selectFilteredPokemons = state => state.pokemons.filteredPokemons;
 
 export default pokemonsSlice.reducer;

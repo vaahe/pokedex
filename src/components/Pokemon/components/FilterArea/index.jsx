@@ -1,39 +1,27 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
+import { useDispatch, useSelector } from 'react-redux';
+import { selectFilters, setFilterTypes, setFilters } from 'redux/features/pokemons/pokemonsSlice';
+
 import Box from '@mui/material/Box';
 import TextField from '@mui/material/TextField';
 import { FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
+
 export const FilterArea = () => {
-    const [pokemonName, setPokemonName] = useState([]);
-    const [pokemons, setPokemons] = useState([]);
-
-
-    // const getPokemons = async (limit = 20, offset = 0) => {
-    //     const res = await fetch(`https://pokeapi.co/api/v2/pokemon/?limit=${limit}&offset=${offset}`)
-    //     const data = await res.json();
-    //     setPokemons(currentState => [...currentState, data.results]);
-
-    //     if (Boolean(data.next)) {
-    //         console.log(234);
-    //         offset += 20;
-    //         getPokemons(20, offset);
-    //     }
-    //     console.log(pokemons);
-    // }
+    const dispatch = useDispatch();
+    const filters = useSelector(selectFilters);
 
     const types = ['Bug', 'Dark', 'Dragon', 'Electric', 'Fairy', 'Fighting',
         'Fire', 'Flying', 'Ghost', 'Grass', 'Ground', 'Ice', 'Normal', 'Poison',
         'Psychic', 'Rock', 'Steel', 'Water'];
 
-    const handleChange = (event) => {
-        const { target: { value } } = event;
-        setPokemonName(typeof value === 'string' ? value.split(',') : value);
-
-        console.log(event.target.value);
+    const handleSelector = (e) => {
+        const { target: { value } } = e;
+        dispatch(setFilterTypes(value));
     };
 
-    const handleSearch = (event) => {
-        console.log(event.target.value);
+    const handleSearchInput = (e) => {
+        dispatch(setFilters({ ...filters, name: e.target.value }));
     }
 
     return (
@@ -47,18 +35,18 @@ export const FilterArea = () => {
                     id="filled-required"
                     label="Search pokemon by name"
                     variant="filled"
-                    onChange={(e) => console.log(e.target.value)}
+                    onChange={handleSearchInput}
                 />
             </Box>
             <FormControl sx={{ width: '20%' }}>
-                <InputLabel id="demo-multiple-name-label">Select Type</InputLabel>
+                <InputLabel id="multiple-name-label">Select Type</InputLabel>
                 <Select
-                    labelId="demo-multiple-name-label"
-                    id="demo-multiple-name"
+                    labelId="multiple-name-label"
+                    id="multiple-name"
                     multiple
-                    value={pokemonName}
+                    value={filters.types}
                     label="Select Type"
-                    onChange={handleChange}
+                    onChange={handleSelector}
                 >
                     {types.map(type => <MenuItem value={type} key={type}>{type}</MenuItem>)}
                 </Select>

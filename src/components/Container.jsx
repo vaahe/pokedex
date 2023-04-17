@@ -1,17 +1,19 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import Pokemon from './Pokemon';
-import { selectFilteredPokemons, selectPokemons, selectStatus } from '../redux/features/pokemons/pokemonsSlice';
 
-import { Box, CircularProgress, Grid } from '@mui/material';
+import { Pokemon } from './Pokemon';
 import { Pagination } from './Pokemon/components/Pagination';
 import { FilterArea } from './Pokemon/components/FilterArea';
+import { selectFilteredPokemons, selectStatus } from '../redux/features/pokemons/pokemonsSlice';
+
+import { Box, CircularProgress, Grid } from '@mui/material';
 
 
-const Container = () => {
-    const pokemons = useSelector(selectFilteredPokemons);
-    const isLoading = useSelector(selectStatus) === "loading";
+export const Container = () => {
+    const isLoading = useSelector(selectStatus);
+    const filteredPokemons = useSelector(selectFilteredPokemons);
+
 
     return (
         <>
@@ -30,8 +32,9 @@ const Container = () => {
                         alignItems="center"
                         sx={{ p: 12 }}
                     >
-                        {pokemons.length && pokemons.map((pokemon) =>
-                            <Pokemon key={pokemon.id} pokemon={pokemon} />)}
+                        {!!filteredPokemons.length && filteredPokemons.map((pokemon) =>
+                            <Pokemon key={pokemon.id} pokemon={pokemon} />)
+                        }
                     </Grid>
                     <Pagination />
                 </>
@@ -39,5 +42,3 @@ const Container = () => {
         </>
     )
 }
-
-export default Container;

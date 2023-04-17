@@ -1,78 +1,62 @@
-import React, { useEffect, useRef, useState } from 'react'
-import { Box, Button, FormControl, InputLabel, MenuItem, Select, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAsyncPokemons, fetchNewGroup, selectFilteredPokemons, selectPokemons, selectPokemonsLength } from 'redux/features/pokemons/pokemonsSlice';
+import { fetchNewGroup, selectFilters, selectPokemonsLength, selectPrefiltered } from 'redux/features/pokemons/pokemonsSlice';
+
+import { Box, Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
 
 
 export const Pagination = () => {
-    const [dataLength, setDataLength] = useState(0);
-    const [pagesCount, setPagesCount] = useState(1);
+    const [offset, setOffset] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
     const [itemsPerPage, setItemsPerPage] = useState(15);
 
-    const limit = useRef(15);
-    const offset = useRef(0);
-
     const dispatch = useDispatch();
+
+    const filters = useSelector(selectFilters);
+    const prefiltered = useSelector(selectPrefiltered);
     const pokemonsLength = useSelector(selectPokemonsLength);
 
-    useEffect(() => {
-        console.log(pokemonsLength);
-        debugger;
-        if (pokemonsLength) {
-            dispatch(fetchNewGroup({ limit: limit.current, offset: offset.current }));
-            offset.current = offset.current + limit.current;
-            console.log("barlus dzez");
-        }
-        console.log("initial load")
-    }, [pokemonsLength])
-
-    const prevPage = async () => {
-        if (currentPage === 1) {
-            return false;
-        }
-
-        let newOffset = offset.current - itemsPerPage;
-        offset.current = newOffset;
-
-        setCurrentPage(currentState => currentState - 1);
-        // dispatch(fetchNewGroup({ limit: itemsPerPage, offset: newOffset }));
-    }
-
-    const nextPage = () => {
-        if (currentPage === dataLength) {
-            return false;
-        }
-
-        let newOffset = offset.current + itemsPerPage;
-        offset.current = newOffset;
-
-        // setOffset(newOffset);
-
-        setCurrentPage(currentState => currentState + 1);
-        // dispatch(fetchNewGroup({ limit: itemsPerPage, offset: newOffset }));
-    }
+    const pagesCount = prefiltered ? Math.ceil(prefiltered / itemsPerPage) : Math.ceil(pokemonsLength / itemsPerPage);
 
     const handleChange = (e) => {
         setItemsPerPage(e.target.value);
     }
 
-    // useEffect(() => {
-    //     console.log(pokemons);
-    //     // getDataLength();
-    // }, []);
+    const prevPage = () => {
+        if (currentPage === 1) {
+            return false;
+        }
 
-    // useEffect(() => {
-    //     window.scrollTo({
-    //         behavior: "smooth",
-    //         top: "0px",
-    //     });
-    // }, [currentPage]);
+        let newOffset = offset - itemsPerPage;
+        setOffset(newOffset);
+        setCurrentPage(currentState => currentState - 1);
+        dispatch(fetchNewGroup({ limit: itemsPerPage, offset }));
+    }
 
-    // useEffect(() => {
-    //     dispatch(fetchAsyncPokemons({ limit: itemsPerPage, offset: 0 }));
-    //     setPagesCount(() => parseInt(Math.ceil(dataLength / itemsPerPage)));
-    // }, [dataLength, dispatch, itemsPerPage]);
+    const nextPage = () => {
+        if (currentPage === pagesCount) {
+            return false;
+        }
+
+        let newOffset = offset + itemsPerPage;
+        setOffset(newOffset);
+
+        setCurrentPage(currentState => currentState + 1);
+        dispatch(fetchNewGroup({ limit: itemsPerPage, offset }));
+    }
+
+
+    useEffect(() => {
+        window.scrollTo({
+            behavior: "smooth",
+            top: "0px",
+        });
+    }, [currentPage]);
+
+    useEffect(() => {
+        dispatch(fetchNewGroup({ limit: itemsPerPage, offset }));
+    }, [dispatch, itemsPerPage, offset, filters]);
+
 
     return (
         <>
