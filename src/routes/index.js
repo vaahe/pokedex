@@ -8,7 +8,8 @@ import { Container } from "components/Container";
 export const routes = [
     {
         path: "/pokedex",
-        element: <Container />
+        element: <Container />,
+        index: true
     },
     {
         path: "/news",

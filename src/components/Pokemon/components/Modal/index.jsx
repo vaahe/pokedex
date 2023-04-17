@@ -18,7 +18,7 @@ export const PokemonModal = ({ open, handleClose, pokemon }) => {
             aria-describedby="modal-modal-description"
         >
             <Box sx={{ position: 'absolute', top: '50%', left: '50%', height: '60%', width: '60%', transform: 'translate(-50%, -50%)', bgcolor: 'white', boxShadow: '24', p: 2 }}>
-                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 4 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <Typography variant="h2" sx={{ mr: 2 }}>ID {pokemon.id}</Typography>
                         <Typography variant="h2" sx={{ ml: 2, textTransform: 'capitalize' }}>
@@ -35,7 +35,7 @@ export const PokemonModal = ({ open, handleClose, pokemon }) => {
                         alt={pokemon.name}
                         sx={{ width: '25%', height: '25%' }}
                     />
-                    <Box sx={{ backgroundColor: "rgb(117 173 230)", borderRadius: '10px', display: 'flex', justifyContent: "space-between", width: '100%', mx: 1 }}>
+                    <Box sx={{ backgroundColor: "rgb(117 173 230)", borderRadius: '10px', display: 'flex', justifyContent: "space-between", width: '100%', p: 1 }}>
                         <Stats pokemon={pokemon} />
                         <Abilities pokemon={pokemon} />
                         <Types pokemon={pokemon} />
