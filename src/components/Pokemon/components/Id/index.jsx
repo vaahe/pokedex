@@ -22,6 +22,6 @@ export const Id = ({ pokemon }) => {
         return `#${id}`;
     }
     return (
-        <Typography component="h4" variant="h5" sx={{ color: 'rgb(45, 64, 23)' }}>{getId(id)}</Typography>
+        <Typography component="h4" variant="h5" color="rgb(45, 64, 23)" > {getId(id)}</Typography >
     )
 }

@@ -59,7 +59,7 @@ export const Pagination = () => {
 
 
     return (
-        <>
+        <Box compnent="div" sx={{px: 12}}>
             <FormControl sx={{ width: '10%' }}>
                 <InputLabel id="demo-simple-select-label">Items Per Page</InputLabel>
                 <Select
@@ -80,6 +80,6 @@ export const Pagination = () => {
                 <Box component="span" sx={{ fontSize: '24px' }}>{currentPage} of {pagesCount}</Box>
                 <Button onClick={nextPage}>Next</Button>
             </Box>
-        </>
+        </Box>
     )
 }

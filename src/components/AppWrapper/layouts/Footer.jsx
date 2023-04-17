@@ -1,32 +1,52 @@
 import React from 'react';
-import { Box, Typography } from '@mui/material'
+import PropTypes from 'prop-types';
+import Box from '@mui/material/Box';
+import Container from '@mui/material/Container';
+import Typography from '@mui/material/Typography';
+import Link from '@mui/material/Link';
 
-import TwitterIcon from '@mui/icons-material/Twitter';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
-import FacebookIcon from '@mui/icons-material/Facebook';
-import InstagramIcon from '@mui/icons-material/Instagram';
+function Copyright() {
+  return (
+    <>
+      <hr />
+      <Typography variant="body2" color="text.secondary" fontSize="18px" align="center">
+        {'Copyright © '}
+        <Link color="inherit" href="https://github.com/vaahe">
+          Vahe Barseghyan
+        </Link>{' '}
+        {new Date().getFullYear()}
+        {'.'}
+      </Typography>
+    </>
+  );
+}
 
-
-export const Footer = () => {
-  const year = new Date().getFullYear();
+export const Footer = (props) => {
+  const { description, title } = props;
 
   return (
-    <Box sx={{ backgroundColor: 'rgb(25, 118, 210)', px: 12, height: '200px' }}>
-      <Box sx={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-        <Box
-          component="img"
-          sx={{ height: 64, mt: 1 }}
-          alt="Pokedex logo"
-          src={"https://archives.bulbagarden.net/media/upload/4/4b/Pok%C3%A9dex_logo.png"}
-        />
-        <Box component="div" sx={{ display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "space-around" }}>
-          <TwitterIcon />
-          <LinkedInIcon />
-          <FacebookIcon />
-          <InstagramIcon />
-        </Box>
-      </Box>
-      <Typography component="p" sx={{ color: "white", textAlign: "center" }}>All Rights Reserved {year}</Typography>
+    <Box component="footer" sx={{ py: 6 }}>
+      <Container maxWidth="lg">
+        <Typography variant="h6" align="center" gutterBottom>
+          {title}
+        </Typography>
+        <Typography
+          variant="subtitle1"
+          align="center"
+          color="text.secondary"
+          component="p"
+        >
+          {description}
+        </Typography>
+        <Copyright />
+      </Container>
     </Box>
-  )
+  );
 }
+
+Footer.propTypes = {
+  description: PropTypes.string.isRequired,
+  title: PropTypes.string.isRequired,
+};
+
+export default Footer;
