@@ -1,33 +1,50 @@
 import React, { useEffect, useState } from 'react'
-import { Box, Button, Typography } from '@mui/material';
 import { useDispatch, useSelector } from 'react-redux';
-import { fetchAsyncPokemons, selectPokemons } from 'redux/features/pokemons/pokemonsSlice';
+import { fetchNewGroup, selectFilters, selectPokemonsLength, selectPrefiltered } from 'redux/features/pokemons/pokemonsSlice';
+
+import { Box, Button, FormControl, InputLabel, MenuItem, Select } from '@mui/material';
+
 
 export const Pagination = () => {
+    const [offset, setOffset] = useState(0);
     const [currentPage, setCurrentPage] = useState(1);
-    const dispatch = useDispatch();
-    const pokemons = useSelector(selectPokemons);
+    const [itemsPerPage, setItemsPerPage] = useState(15);
 
-    let offset = 0;
-    const dataLength = 150;
-    const itemsPerPage = 15;
-    const numberOfPages = dataLength / itemsPerPage;
+    const dispatch = useDispatch();
+
+    const filters = useSelector(selectFilters);
+    const prefiltered = useSelector(selectPrefiltered);
+    const pokemonsLength = useSelector(selectPokemonsLength);
+
+    const pagesCount = prefiltered ? Math.ceil(prefiltered / itemsPerPage) : Math.ceil(pokemonsLength / itemsPerPage);
+
+    const handleChange = (e) => {
+        setItemsPerPage(e.target.value);
+    }
 
     const prevPage = () => {
         if (currentPage === 1) {
             return false;
         }
 
-        dispatch(fetchAsyncPokemons({ limit: 15, offset: offset -= 15 }));
+        let newOffset = offset - itemsPerPage;
+        setOffset(newOffset);
         setCurrentPage(currentState => currentState - 1);
+        dispatch(fetchNewGroup({ limit: itemsPerPage, offset }));
     }
 
     const nextPage = () => {
-        dispatch(fetchAsyncPokemons({ limit: 15, offset: offset += 15 }));
+        if (currentPage === pagesCount) {
+            return false;
+        }
+
+        let newOffset = offset + itemsPerPage;
+        setOffset(newOffset);
+
         setCurrentPage(currentState => currentState + 1);
+        dispatch(fetchNewGroup({ limit: itemsPerPage, offset }));
     }
 
-    console.log(pokemons);
 
     useEffect(() => {
         window.scrollTo({
@@ -36,11 +53,33 @@ export const Pagination = () => {
         });
     }, [currentPage]);
 
+    useEffect(() => {
+        dispatch(fetchNewGroup({ limit: itemsPerPage, offset }));
+    }, [dispatch, itemsPerPage, offset, filters]);
+
+
     return (
-        <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-            <Button onClick={prevPage}>Prev</Button>
-            <Typography component="span">{currentPage}</Typography>
-            <Button onClick={nextPage}>Next</Button>
-        </Box>
+        <>
+            <FormControl sx={{ width: '10%' }}>
+                <InputLabel id="demo-simple-select-label">Items Per Page</InputLabel>
+                <Select
+                    labelId="demo-simple-select-label"
+                    id="demo-simple-select"
+                    value={itemsPerPage}
+                    label="itemsPerPage"
+                    onChange={handleChange}
+                >
+                    <MenuItem value={10}>10</MenuItem>
+                    <MenuItem value={15}>15</MenuItem>
+                    <MenuItem value={20}>20</MenuItem>
+                    <MenuItem value={50}>50</MenuItem>
+                </Select>
+            </FormControl>
+            <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                <Button onClick={prevPage}>Prev</Button>
+                <Box component="span" sx={{ fontSize: '24px' }}>{currentPage} of {pagesCount}</Box>
+                <Button onClick={nextPage}>Next</Button>
+            </Box>
+        </>
     )
 }

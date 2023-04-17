@@ -1,33 +1,44 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
 
-import Pokemon from './Pokemon';
-import { selectPokemons } from '../redux/features/pokemons/pokemonsSlice';
 
-import { Grid } from '@mui/material';
+import { Pokemon } from './Pokemon';
 import { Pagination } from './Pokemon/components/Pagination';
 import { FilterArea } from './Pokemon/components/FilterArea';
+import { selectFilteredPokemons, selectStatus } from '../redux/features/pokemons/pokemonsSlice';
+
+import { Box, CircularProgress, Grid } from '@mui/material';
 
 
-const Container = () => {
-    const pokemons = useSelector(selectPokemons);
+export const Container = () => {
+    const isLoading = useSelector(selectStatus);
+    const filteredPokemons = useSelector(selectFilteredPokemons);
+
 
     return (
         <>
-            <FilterArea />
-            <Grid
-                container
-                spacing={3}
-                direction="row"
-                justifyContent="space-between"
-                alignItems="center"
-                sx={{ p: 12 }}
-            >
-                {pokemons.length && pokemons.map((pokemon) => <Pokemon key={pokemon.id} pokemon={pokemon} />)}
-            </Grid>
-            <Pagination />
+            {isLoading ?
+                <Box sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', my: 20 }}>
+                    <CircularProgress size='100px' />
+                </Box>
+                :
+                <>
+                    <FilterArea />
+                    <Grid
+                        container
+                        spacing={3}
+                        direction="row"
+                        justifyContent="space-between"
+                        alignItems="center"
+                        sx={{ p: 12 }}
+                    >
+                        {!!filteredPokemons.length && filteredPokemons.map((pokemon) =>
+                            <Pokemon key={pokemon.id} pokemon={pokemon} />)
+                        }
+                    </Grid>
+                    <Pagination />
+                </>
+            }
         </>
     )
 }
-
-export default Container;

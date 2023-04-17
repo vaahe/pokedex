@@ -2,8 +2,6 @@ import React, { useEffect, useState } from 'react';
 
 import { Box, Typography } from '@mui/material';
 
-import "./Types.css";
-
 
 export const Types = ({ pokemon }) => {
     const [types, setTypes] = useState([]);
@@ -15,12 +13,13 @@ export const Types = ({ pokemon }) => {
     }, [pokemon.types])
 
     return (
-        <Box sx={{ display: 'flex', justifyContent: 'space-between', width: '50%' }}>
+        <Box>
+            <Typography variant='h5' sx={{ mb: 2 }}>Types</Typography>
             {types.length && types.map(slot =>
-                <Typography variant="h5" component="h3" key={slot.type.url} className={slot.type.name} sx={{ px: 1, mr: 1 }}>
+                <Typography variant="h5" component="h3" key={slot.type.url} className={slot.type.name} sx={{ my: 1, textTransform: "capitalize" }}>
                     {slot.type.name}
-                </Typography>
-            )}
+                </Typography>)
+            }
         </Box >
     )
 }

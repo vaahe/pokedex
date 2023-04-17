@@ -1,0 +1,5 @@
+svg:hover {
+    transition: .3s ease-in;
+    color: white;
+    cursor: pointer;
+}
