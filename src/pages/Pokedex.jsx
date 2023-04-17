@@ -1,8 +1,8 @@
 import React from 'react';
 
 
-export const Pokedex = () => {
+export const Pokemons = () => {
   return (
-    <div>Pokedex</div>
+    <div>Pokemons</div>
   )
 }

@@ -1,7 +1,7 @@
 import { News } from "pages/News";
 import { About } from "pages/About";
 import { Error } from "pages/Error";
-import { Pokedex } from "pages/Pokedex";
+import { Pokemons } from "pages/Pokedex";
 import { Container } from "components/Container";
 
 
@@ -15,8 +15,8 @@ export const routes = [
         element: <News />,
     },
     {
-        path: "/pokedex",
-        element: <Pokedex />
+        path: "/pokemons",
+        element: <Pokemons />
     },
     {
         path: "/about",
